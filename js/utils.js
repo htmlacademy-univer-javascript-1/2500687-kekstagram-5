@@ -1,4 +1,7 @@
-import {getRandomNumber, getRandomArrayElement} from './get-random';
+//Вспомогательные функции
+
+const getRandomNumber = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+const getRandomArrayElement = (array) => array[getRandomNumber(0, array.length - 1)];
 
 function getRandomMessage(messages) {
   const numberOfMessage = getRandomNumber(1,2); //1 или 2 сообщения
@@ -33,4 +36,19 @@ function createComments(messages, names, usedIds = [], minId = 100, maxId = 1000
   }
   return comments;
 }
-export {createComments};
+
+function createDescriptions(photoDescription, messages, names) { //создаем 25 описаний к фото
+  const descriptions = [];
+  for (let i = 1; i <= 25; i++) {
+    const oneDescription = {
+      id: i,
+      url: `photos/${i}.jpg`,
+      description: getRandomArrayElement(photoDescription),
+      likes: getRandomNumber(15, 200),
+      comments: createComments(messages, names)
+    };
+    descriptions.push(oneDescription);
+  }
+  return descriptions;
+}
+export {createDescriptions};
