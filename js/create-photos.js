@@ -10,7 +10,7 @@ function renderPhotos(descriptions) {
   descriptions.forEach((description) => {
     const element = template.content.cloneNode(true);
 
-    //заполняем данные
+    //Заполняем данные
     const img = element.querySelector('.picture__img');
     img.src = description.url;
     img.alt = description.description;
