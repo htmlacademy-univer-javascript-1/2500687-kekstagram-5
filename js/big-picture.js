@@ -3,7 +3,7 @@ const bigPicture = document.querySelector('.big-picture');
 const commentsContainer = bigPicture.querySelector('.social__comments');
 const closeButton = bigPicture.querySelector('.big-picture__cancel');
 
-function createComment(comment_data) {
+function createComment(commentData) {
   //создаем разметку для комментария
   const comment = document.createElement('li');
   comment.innerHTML =
@@ -11,9 +11,9 @@ function createComment(comment_data) {
   comment.classList.add('social__comment');
 
   //заполняем комментарий данными
-  comment.querySelector('.social__picture').src = comment_data.avatar;
-  comment.querySelector('.social__picture').alt = comment_data.name;
-  comment.querySelector('.social__text').textContent = comment_data.message;
+  comment.querySelector('.social__picture').src = commentData.avatar;
+  comment.querySelector('.social__picture').alt = commentData.name;
+  comment.querySelector('.social__text').textContent = commentData.message;
 
   return comment;
 }
