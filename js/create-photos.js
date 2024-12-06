@@ -1,6 +1,6 @@
 import {createDescriptions} from './utils.js';
 import {messages, names, photoDescription} from './data.js';
-
+import {openBigPicture} from './big-picture.js';
 
 function renderPhotos(descriptions) {
   const template = document.querySelector('#picture'); //шаблон элемента фотографии
@@ -18,6 +18,11 @@ function renderPhotos(descriptions) {
     likes.textContent = description.likes;
     const comments = element.querySelector('.picture__comments');
     comments.textContent = description.comments.length;
+
+    const clickableElement = element.querySelector('.picture');
+    clickableElement.addEventListener('click', () => {
+      openBigPicture(description);
+    });
 
     fragment.appendChild(element);
   });
