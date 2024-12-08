@@ -1,5 +1,3 @@
-import {createDescriptions} from './utils.js';
-import {messages, names, photoDescription} from './data.js';
 import {openBigPicture} from './big-picture.js';
 
 function renderPhotos(descriptions) {
@@ -30,5 +28,4 @@ function renderPhotos(descriptions) {
   picturesContainer.appendChild(fragment);
 }
 
-const photoDescriptions = createDescriptions(photoDescription, messages, names);
-renderPhotos(photoDescriptions);
+export {renderPhotos};
