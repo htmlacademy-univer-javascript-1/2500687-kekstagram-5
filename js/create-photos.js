@@ -1,5 +1,3 @@
-import {createDescriptions} from './utils.js';
-import {messages, names, photoDescription} from './data.js';
 import {openBigPicture} from './big-picture.js';
 
 function renderPhotos(descriptions) {
