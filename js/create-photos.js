@@ -30,5 +30,4 @@ function renderPhotos(descriptions) {
   picturesContainer.appendChild(fragment);
 }
 
-const photoDescriptions = createDescriptions(photoDescription, messages, names);
-renderPhotos(photoDescriptions);
+export {renderPhotos};

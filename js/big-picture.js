@@ -45,7 +45,7 @@ function openBigPicture(data) {
   const comments = data.comments;
   if (comments.length > 0) {
     renderComments(comments);
-  };
+  }
   document.addEventListener('keydown', onEscDown);
 }
 
