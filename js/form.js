@@ -8,7 +8,7 @@ const uploadCloseButton = form.querySelector('.img-upload__cancel');
 const hashtags = form.querySelector('.text__hashtags');
 const description = form.querySelector('.text__description');
 const submitButton = document.querySelector('#upload-submit');
-const HASHTAG_REGEX = /^#[a-zA-Zа-яА-ЯёЁ0-9]{1,19}$/; //регулярное выражение для проверки хэш-тегов
+const HASHTAG_REGEX = /^#[a-zA-Zа-яА-ЯёЁ0-9]/; //регулярное выражение для проверки хэш-тегов
 
 function closeForm() {
   form.reset();
@@ -34,10 +34,11 @@ uploadFile.addEventListener('change', openForm);
 uploadCloseButton.addEventListener('click', closeForm);
 
 const pristine = new Pristine(form, {
-  classTo: 'img-upload__element',
-  errorTextParent: 'img-upload__element',
-  errorTextClass: 'img-upload__error'
-}, true);
+  classTo: 'img-upload__field-wrapper', // Родитель, к которому добавляются классы
+  errorTextParent: 'img-upload__field-wrapper', // Куда вставлять текст ошибки
+  errorTextTag: 'div', // Тег для текста ошибки
+  errorTextClass: 'pristine-error' // Класс для текста ошибки
+});
 
 function validateHashtags(value) {
   if (value.trim() === '') {
@@ -151,6 +152,8 @@ function unblockSubmitButton() {
 function onSuccess() {
   closeForm();
   showMessage('success');
+  form.reset();
+  pristine.reset();
 }
 
 function onError() {
