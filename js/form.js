@@ -8,7 +8,7 @@ const uploadCloseButton = form.querySelector('.img-upload__cancel');
 const hashtags = form.querySelector('.text__hashtags');
 const description = form.querySelector('.text__description');
 const submitButton = document.querySelector('#upload-submit');
-const HASHTAG_REGEX = /^#[a-zA-Zа-яА-ЯёЁ0-9]/; //регулярное выражение для проверки хэш-тегов
+const HASHTAG_REGEX = /^#[a-zа-яё0-9]{1,19}$/i; //регулярное выражение для проверки хэш-тегов
 
 function closeForm() {
   form.reset();
@@ -152,8 +152,6 @@ function unblockSubmitButton() {
 function onSuccess() {
   closeForm();
   showMessage('success');
-  form.reset();
-  pristine.reset();
 }
 
 function onError() {
