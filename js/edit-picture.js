@@ -37,6 +37,13 @@ scaleControlBigger.addEventListener('click', () => {
   }
 });
 
+//сброс масштаба
+function resetScale() {
+  currentScale = 100;
+  scaleControlValue.value = `${currentScale}%`;
+  imagePreview.style.transform = 'scale(1)'; // Масштаб 100% соответствует scale(1)
+}
+
 //устанавливаем масштаб по умолчанию при открытии формы
 setScale(SCALE_DEFAULT);
 
@@ -89,6 +96,18 @@ function updateSlider(effect) {
   updateEffect();
 }
 
+//сброс фильтров
+function resetEffects() {
+  currentEffect = 'none';
+  imagePreview.className = '';
+  imagePreview.style.filter = '';
+  effectLevelValue.value = '';
+  effectLevelContainer.style.display = 'none';
+  if (effectLevelSlider.noUiSlider) {
+    effectLevelSlider.noUiSlider.reset();
+  }
+}
+
 //обработчик смены эффекта
 effectsList.addEventListener('change', (event) => {
   if (event.target.classList.contains('effects__radio')) {
@@ -101,3 +120,5 @@ effectsList.addEventListener('change', (event) => {
 effectLevelSlider.noUiSlider.on('update', updateEffect);
 
 effectLevelContainer.style.display = 'none';
+
+export {resetScale, resetEffects};

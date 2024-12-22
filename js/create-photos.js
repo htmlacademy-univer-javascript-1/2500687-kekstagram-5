@@ -1,6 +1,6 @@
 import {openBigPicture} from './big-picture.js';
 
-function renderPhotos(descriptions) {
+async function renderPhotos(descriptions) {
   const template = document.querySelector('#picture'); //шаблон элемента фотографии
   const picturesContainer = document.querySelector('.pictures'); //контейнер для фотографий
   const fragment = document.createDocumentFragment();
@@ -28,4 +28,23 @@ function renderPhotos(descriptions) {
   picturesContainer.appendChild(fragment);
 }
 
-export {renderPhotos};
+//показ сообщения об ошибки загрузки с сервера
+function showErrorMessage(message) {
+  const errorContainer = document.createElement('div');
+  errorContainer.style.position = 'fixed';
+  errorContainer.style.top = '50%';
+  errorContainer.style.left = '50%';
+  errorContainer.style.transform = 'translate(-50%, -50%)';
+  errorContainer.style.padding = '20px';
+  errorContainer.style.backgroundColor = 'rgba(255, 0, 0, 0.9)';
+  errorContainer.style.color = '#fff';
+  errorContainer.style.fontSize = '18px';
+  errorContainer.style.textAlign = 'center';
+  errorContainer.style.borderRadius = '10px';
+  errorContainer.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)';
+  errorContainer.textContent = message;
+
+  document.body.appendChild(errorContainer);
+}
+
+export {renderPhotos, showErrorMessage};
