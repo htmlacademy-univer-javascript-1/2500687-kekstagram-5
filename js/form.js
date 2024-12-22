@@ -1,4 +1,6 @@
 import {showMessage} from './utils.js';
+import {resetScale, resetEffects} from './edit-picture.js';
+import {sendData} from './api.js';
 
 const form = document.querySelector('.img-upload__form');
 const body = document.querySelector('body');
@@ -10,10 +12,22 @@ const description = form.querySelector('.text__description');
 const submitButton = document.querySelector('#upload-submit');
 const HASHTAG_REGEX = /^#[a-zа-яё0-9]{1,19}$/i; //регулярное выражение для проверки хэш-тегов
 
+const pristine = new Pristine(form, {
+  classTo: 'img-upload__field-wrapper', // Родитель, к которому добавляются классы
+  errorTextParent: 'img-upload__field-wrapper', // Куда вставлять текст ошибки
+  errorTextTag: 'div', // Тег для текста ошибки
+  errorTextClass: 'pristine-error' // Класс для текста ошибки
+});
+
 function closeForm() {
   form.reset();
+  pristine.reset();
   uploadOverlay.classList.add('hidden');
   body.classList.remove('modal-open');
+  hashtags.value = '';
+  description.value = '';
+  resetScale();
+  resetEffects();
   document.removeEventListener('keydown', onEscKeydown);
 }
 
@@ -32,13 +46,6 @@ function openForm() {
 
 uploadFile.addEventListener('change', openForm);
 uploadCloseButton.addEventListener('click', closeForm);
-
-const pristine = new Pristine(form, {
-  classTo: 'img-upload__field-wrapper', // Родитель, к которому добавляются классы
-  errorTextParent: 'img-upload__field-wrapper', // Куда вставлять текст ошибки
-  errorTextTag: 'div', // Тег для текста ошибки
-  errorTextClass: 'pristine-error' // Класс для текста ошибки
-});
 
 function validateHashtags(value) {
   if (value.trim() === '') {
@@ -120,24 +127,6 @@ pristine.addValidator(
   validateDescription,
   getDescriptionErrorMessage
 );
-
-function sendData(onSendSuccess, onSendError, formData) {
-  fetch('https://29.javascript.htmlacademy.pro/kekstagram', {
-    method: 'POST',
-    body: formData,
-  })
-    .then((response) => {
-      if (response.ok) {
-        onSendSuccess();
-        closeForm(); // Закрываем форму при успехе
-      } else {
-        onSendError(); // Обработка серверных ошибок
-      }
-    })
-    .catch(() => {
-      onSendError(); // Обработка сетевых ошибок
-    });
-}
 
 function blockSubmitButton() {
   submitButton.disabled = true;

@@ -1,8 +1,15 @@
-import {createDescriptions} from './utils.js';
-import {messages, names, photoDescription} from './data.js';
-import { renderPhotos} from './create-photos.js';
+import { getData } from './api.js';
 import './form.js';
 import './edit-picture.js';
+import {renderPhotos, showErrorMessage} from './create-photos.js';
 
-const photoDescriptions = createDescriptions(photoDescription, messages, names);
-renderPhotos(photoDescriptions);
+async function loadPhotos() {
+  try {
+    const photos = await getData();
+    renderPhotos(photos);
+  } catch (error) {
+    showErrorMessage('Не удалось загрузить фотографии. Попробуйте обновить страницу.');
+  }
+}
+
+loadPhotos();
