@@ -1,5 +1,5 @@
 function sendData(onSendSuccess, onSendError, formData) {
-  fetch('https://29.javascript.htmlacademy.pro/kekstagram', {
+  return fetch('https://29.javascript.htmlacademy.pro/kekstagram', {
     method: 'POST',
     body: formData,
   })
@@ -8,10 +8,12 @@ function sendData(onSendSuccess, onSendError, formData) {
         onSendSuccess();
       } else {
         onSendError(); // Обработка серверных ошибок
+        throw new Error('Ошибка отправки данных на сервер');
       }
     })
     .catch(() => {
       onSendError(); // Обработка сетевых ошибок
+      throw new Error('Сетевая ошибка при отправке данных');
     });
 }
 function getData() {

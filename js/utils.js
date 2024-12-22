@@ -94,4 +94,11 @@ function onOutsideClick(event, type) {
   }
 }
 
-export {createDescriptions, showMessage};
+function debounce (callback, timeoutDelay = 500) {
+  let timeoutId;
+  return (...rest) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
+  };
+}
+export {createDescriptions, showMessage, debounce};
