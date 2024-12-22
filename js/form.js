@@ -147,19 +147,23 @@ function onError() {
   showMessage('error');
 }
 
-form.addEventListener('submit', (event) => {
+async function onFormSubmit(event) {
   event.preventDefault();
 
   if (pristine.validate()) {
     const formData = new FormData(form);
     blockSubmitButton();
-    sendData(
-      onSuccess, // Успешная отправка
-      onError, // Ошибка отправки
-      formData
-    );
-    unblockSubmitButton();
+
+    try {
+      await sendData(onSuccess, onError, formData); // Ждём завершения отправки
+    } catch (error) {
+      onError(); // Обработка ошибок (если нужно)
+    } finally {
+      unblockSubmitButton(); // Разблокируем кнопку в любом случае
+    }
   } else {
     showMessage('error');
   }
-});
+}
+
+form.addEventListener('submit', onFormSubmit);
