@@ -9,7 +9,9 @@ const uploadOverlay = form.querySelector('.img-upload__overlay');
 const uploadCloseButton = form.querySelector('.img-upload__cancel');
 const hashtags = form.querySelector('.text__hashtags');
 const description = form.querySelector('.text__description');
-const submitButton = document.querySelector('#upload-submit');
+const submitButton = form.querySelector('#upload-submit');
+const imagePreview = form.querySelector('.img-upload__preview img'); // Добавлено: ссылка на изображение
+const effectsPreviews = form.querySelectorAll('.effects__preview');
 const HASHTAG_REGEX = /^#[a-zа-яё0-9]{1,19}$/i; //регулярное выражение для проверки хэш-тегов
 
 const pristine = new Pristine(form, {
@@ -26,6 +28,8 @@ function closeForm() {
   body.classList.remove('modal-open');
   hashtags.value = '';
   description.value = '';
+  imagePreview.src = '';
+  effectsPreviews.forEach((preview) => (preview.style.backgroundImage = ''));
   resetScale();
   resetEffects();
   document.removeEventListener('keydown', onEscKeydown);
@@ -44,7 +48,29 @@ function openForm() {
   document.addEventListener('keydown', onEscKeydown);
 }
 
-uploadFile.addEventListener('change', openForm);
+function onUploadFile() {
+  const file = uploadFile.files[0];
+  const validFormats = ['image/jpeg', 'image/png', 'image/jpg'];
+
+  if (file && validFormats.includes(file.type)) {
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      imagePreview.src = reader.result; // Устанавливаем загруженное изображение
+      effectsPreviews.forEach((preview) => {
+        preview.style.backgroundImage = `url(${reader.result})`; // Обновляем эффекты
+      });
+      openForm();
+    };
+
+    reader.readAsDataURL(file); // Читаем файл как Data URL
+  } else {
+    showMessage('error'); // Показываем сообщение об ошибке
+    uploadFile.value = ''; // Сбрасываем поле ввода файла
+  }
+}
+
+uploadFile.addEventListener('change', onUploadFile);
 uploadCloseButton.addEventListener('click', closeForm);
 
 function validateHashtags(value) {
