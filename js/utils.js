@@ -1,6 +1,4 @@
 //Вспомогательные функции
-const getRandomNumber = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
-const getRandomArrayElement = (array) => array[getRandomNumber(0, array.length - 1)];
 const body = document.querySelector('body');
 const successTemplate = document.querySelector('#success').content.cloneNode(true);
 const successElement = successTemplate.querySelector('.success');
@@ -9,55 +7,7 @@ const errorTemplate = document.querySelector('#error').content.cloneNode(true);
 const errorElement = errorTemplate.querySelector('.error');
 const errorButton = errorElement.querySelector('.error__button');
 
-function getRandomMessage(messages) {
-  const numberOfMessage = getRandomNumber(1,2); //1 или 2 сообщения
-  const randomMessages = [];
-  for (let i = 0; i < numberOfMessage; i++) {
-    randomMessages.push(getRandomArrayElement(messages));
-  }
-  return randomMessages;
-}
-
-function createComments(messages, names, usedIds = [], minId = 100, maxId = 1000) {
-  const comments = [];
-  //генерируем уникальный id
-  let id;
-  for (let j = 0; j < getRandomNumber(0, 30); j++) {
-    // eslint-disable-next-line no-constant-condition
-    while (true) {
-      id = getRandomNumber(minId, maxId);
-      if (usedIds.indexOf(id) === -1) { // проверяем, не использовался ли id ранее
-        usedIds.push(id);
-        break;
-      }
-    }
-    //создаем комментарий
-    const comment = {
-      id: id,
-      avatar: `img/avatar-${getRandomNumber(1, 6)}.svg`,
-      message: getRandomMessage(messages),
-      name: getRandomArrayElement(names)
-    };
-    comments.push(comment); //добавляем в общий массив комментариев
-  }
-  return comments;
-}
-
-function createDescriptions(photoDescription, messages, names) { //создаем 25 описаний к фото
-  const descriptions = [];
-  for (let i = 1; i <= 25; i++) {
-    const oneDescription = {
-      id: i,
-      url: `photos/${i}.jpg`,
-      description: getRandomArrayElement(photoDescription),
-      likes: getRandomNumber(15, 200),
-      comments: createComments(messages, names)
-    };
-    descriptions.push(oneDescription);
-  }
-  return descriptions;
-}
-
+//показать сообщение об отправке формы (успех, если отправилось, ошибка, если нет)
 function showMessage(type) {
   const element = type === 'success' ? successElement : errorElement;
   const button = type === 'success' ? successButton : errorButton;
@@ -94,6 +44,25 @@ function onOutsideClick(event, type) {
   }
 }
 
+//показ сообщения об ошибки загрузки с сервера
+function showErrorMessage(message) {
+  const errorContainer = document.createElement('div');
+  errorContainer.style.position = 'fixed';
+  errorContainer.style.top = '50%';
+  errorContainer.style.left = '50%';
+  errorContainer.style.transform = 'translate(-50%, -50%)';
+  errorContainer.style.padding = '20px';
+  errorContainer.style.backgroundColor = 'rgba(255, 0, 0, 0.9)';
+  errorContainer.style.color = '#fff';
+  errorContainer.style.fontSize = '18px';
+  errorContainer.style.textAlign = 'center';
+  errorContainer.style.borderRadius = '10px';
+  errorContainer.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)';
+  errorContainer.textContent = message;
+
+  document.body.appendChild(errorContainer);
+}
+
 function debounce (callback, timeoutDelay = 500) {
   let timeoutId;
   return (...rest) => {
@@ -101,4 +70,5 @@ function debounce (callback, timeoutDelay = 500) {
     timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
   };
 }
-export {createDescriptions, showMessage, debounce};
+
+export {showMessage, showErrorMessage, debounce};

@@ -4,21 +4,24 @@ import {sendData} from './api.js';
 
 const form = document.querySelector('.img-upload__form');
 const body = document.querySelector('body');
-const uploadFile = form.querySelector('#upload-file');
+const uploadFile = form.querySelector('.img-upload__input');
 const uploadOverlay = form.querySelector('.img-upload__overlay');
 const uploadCloseButton = form.querySelector('.img-upload__cancel');
 const hashtags = form.querySelector('.text__hashtags');
 const description = form.querySelector('.text__description');
-const submitButton = form.querySelector('#upload-submit');
-const imagePreview = form.querySelector('.img-upload__preview img'); // Добавлено: ссылка на изображение
+const submitButton = form.querySelector('.img-upload__submit');
+const imagePreview = form.querySelector('.img-upload__preview img');
 const effectsPreviews = form.querySelectorAll('.effects__preview');
 const HASHTAG_REGEX = /^#[a-zа-яё0-9]{1,19}$/i; //регулярное выражение для проверки хэш-тегов
+const MAX_HASHTAGS_COUNT = 5; //максимальное число хэштегов
+const MAX_HASHTAG_LENGTH = 20; //максимальная длина хэштега
+const MAX_DESCRIPTION_LENGTH = 140; //максимальная длина комментария
 
 const pristine = new Pristine(form, {
-  classTo: 'img-upload__field-wrapper', // Родитель, к которому добавляются классы
-  errorTextParent: 'img-upload__field-wrapper', // Куда вставлять текст ошибки
-  errorTextTag: 'div', // Тег для текста ошибки
-  errorTextClass: 'pristine-error' // Класс для текста ошибки
+  classTo: 'img-upload__field-wrapper', //родитель, к которому добавляются классы
+  errorTextParent: 'img-upload__field-wrapper', //куда вставлять текст ошибки
+  errorTextTag: 'div', //тег для текста ошибки
+  errorTextClass: 'pristine-error' //класс для текста ошибки
 });
 
 function closeForm() {
@@ -56,17 +59,17 @@ function onUploadFile() {
     const reader = new FileReader();
 
     reader.onload = () => {
-      imagePreview.src = reader.result; // Устанавливаем загруженное изображение
+      imagePreview.src = reader.result; //устанавливаем загруженное изображение
       effectsPreviews.forEach((preview) => {
-        preview.style.backgroundImage = `url(${reader.result})`; // Обновляем эффекты
+        preview.style.backgroundImage = `url(${reader.result})`; //обновляем эффекты
       });
       openForm();
     };
 
-    reader.readAsDataURL(file); // Читаем файл как Data URL
+    reader.readAsDataURL(file);
   } else {
-    showMessage('error'); // Показываем сообщение об ошибке
-    uploadFile.value = ''; // Сбрасываем поле ввода файла
+    showMessage('error');
+    uploadFile.value = ''; //сбрасываем поле ввода файла
   }
 }
 
@@ -78,7 +81,7 @@ function validateHashtags(value) {
     return true; //проверка на пустоту: хэш-теги не обязательны
   }
   const hashtagsToValidate = value.toLowerCase().trim().split(/\s+/); //разделение хэш-тегов по пробелам
-  if (hashtagsToValidate.length > 5) {
+  if (hashtagsToValidate.length > MAX_HASHTAGS_COUNT) {
     return false; //нельзя указать больше 5 хэш-тегов
   }
   for (const hashtag of hashtagsToValidate) {
@@ -91,7 +94,7 @@ function validateHashtags(value) {
     if (hashtag.includes('#', 1)){
       return false; //хэш-теги должны быть разделены пробелами
     }
-    if (hashtag.length > 20) {
+    if (hashtag.length > MAX_HASHTAG_LENGTH) {
       return false; //хэш-тег не должен быть длиной больше 20 символов
     }
   }
@@ -107,39 +110,39 @@ function validateHashtags(value) {
 function getHashtagsErrorMessage(value) {
   const hashtagsToValidate = value.trim().split(/\s+/);
 
-  if (hashtagsToValidate.length > 5) {
-    return 'Нельзя указать больше 5 хэш-тегов';
+  if (hashtagsToValidate.length > MAX_HASHTAGS_COUNT) {
+    return `Нельзя указать больше ${MAX_HASHTAGS_COUNT} хэш-тегов`;
+  }
+
+  const uniqueHashtags = new Set(hashtagsToValidate.map((tag) => tag.toLowerCase()));
+  if (uniqueHashtags.size !== hashtagsToValidate.length) {
+    return 'Хэш-теги не должны повторяться';
   }
 
   for (const hashtag of hashtagsToValidate) {
     if (hashtag === '#') {
       return 'Хэш-тег не может состоять только из одной решётки';
     }
-    if (!HASHTAG_REGEX.test(hashtag)) {
-      return 'Хэш-тег должен начинаться с # и содержать только буквы и цифры, без спецсимволов и пробелов';
-    }
     if (hashtag.includes('#', 1)) {
       return 'Хэш-теги должны быть разделены пробелами';
     }
-    if (hashtag.length > 20) {
-      return 'Максимальная длина одного хэш-тега — 20 символов, включая решётку';
+    if (hashtag.length > MAX_HASHTAG_LENGTH) {
+      return `Максимальная длина одного хэш-тега — ${MAX_HASHTAG_LENGTH} символов, включая решётку`;
     }
-  }
-
-  const uniqueHashtags = new Set(hashtagsToValidate);
-  if (uniqueHashtags.size !== hashtagsToValidate.length) {
-    return 'Хэш-теги не должны повторяться';
+    if (!HASHTAG_REGEX.test(hashtag)) {
+      return 'Хэш-тег должен начинаться с # и содержать только буквы и цифры, без спецсимволов и пробелов';
+    }
   }
 
   return ''; //если ошибок нет
 }
 
 function validateDescription(value) {
-  return value.length <= 140;
+  return value.length <= MAX_DESCRIPTION_LENGTH;
 }
 
 function getDescriptionErrorMessage() {
-  return 'Длина комментария не может превышать 140 символов';
+  return `Длина комментария не может превышать ${MAX_DESCRIPTION_LENGTH} символов`;
 }
 
 pristine.addValidator(
@@ -181,14 +184,12 @@ async function onFormSubmit(event) {
     blockSubmitButton();
 
     try {
-      await sendData(onSuccess, onError, formData); // Ждём завершения отправки
+      await sendData(onSuccess, onError, formData); //ждём завершения отправки
     } catch (error) {
-      onError(); // Обработка ошибок (если нужно)
+      onError();
     } finally {
-      unblockSubmitButton(); // Разблокируем кнопку в любом случае
+      unblockSubmitButton();
     }
-  } else {
-    showMessage('error');
   }
 }
 
