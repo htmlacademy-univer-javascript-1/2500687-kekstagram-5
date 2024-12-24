@@ -1,5 +1,5 @@
-import { renderPhotos } from './create-photos.js';
-import { debounce } from './utils.js';
+import {renderPhotos} from './create-photos.js';
+import {debounce} from './utils.js';
 
 const imgFiltersElement = document.querySelector('.img-filters');
 const defaultFilterButton = imgFiltersElement.querySelector('#filter-default');
@@ -57,4 +57,4 @@ function setActiveButton(activeButton) {
   activeButton.classList.add('img-filters__button--active');
 }
 
-export { setupFilters };
+export {setupFilters};

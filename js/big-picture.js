@@ -50,7 +50,7 @@ function addPictureDetails(data) {
 
   renderComments(commentsData, currentCommentIndex);
 
-  commentsLoader.removeEventListener('click', onLoadMoreComments); // Удаляем старый обработчик
+  commentsLoader.removeEventListener('click', onLoadMoreComments);
   commentsLoader.addEventListener('click', onLoadMoreComments);
 }
 
@@ -68,7 +68,7 @@ function openBigPicture(data) {
 function closeBigPicture() {
   bigPicture.classList.add('hidden');
   body.classList.remove('modal-open');
-  commentsLoader.removeEventListener('click', onLoadMoreComments); // Открепляем обработчик
+  commentsLoader.removeEventListener('click', onLoadMoreComments);
   document.removeEventListener('keydown', onEscDown);
 }
 

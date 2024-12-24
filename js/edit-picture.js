@@ -9,10 +9,10 @@ const effectLevelContainer = document.querySelector('.img-upload__effect-level')
 const effectLevelSlider = document.querySelector('.effect-level__slider');
 const effectLevelValue = document.querySelector('.effect-level__value');
 
-const SCALE_STEP = 25; // Шаг изменения
-const SCALE_MIN = 25; // Минимальное значение
-const SCALE_MAX = 100; // Максимальное значение
-const SCALE_DEFAULT = 100; // Значение по умолчанию
+const SCALE_STEP = 25; //шаг изменения
+const SCALE_MIN = 25; //минимальное значение
+const SCALE_MAX = 100; //максимальное значение
+const SCALE_DEFAULT = 100; //значение по умолчанию
 
 //устанавливаем значение масштаба
 let currentScale = SCALE_DEFAULT;

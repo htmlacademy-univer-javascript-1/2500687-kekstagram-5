@@ -1,8 +1,10 @@
-import { getData } from './api.js';
+import {getData} from './api.js';
+import {renderPhotos} from './create-photos.js';
+import {showErrorMessage} from './utils.js';
+import {setupFilters} from './filter.js';
 import './form.js';
 import './edit-picture.js';
-import {renderPhotos, showErrorMessage} from './create-photos.js';
-import {setupFilters} from './filter.js';
+
 
 async function loadPhotos() {
   try {

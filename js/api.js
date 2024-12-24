@@ -7,12 +7,12 @@ function sendData(onSendSuccess, onSendError, formData) {
       if (response.ok) {
         onSendSuccess();
       } else {
-        onSendError(); // Обработка серверных ошибок
+        onSendError();
         throw new Error('Ошибка отправки данных на сервер');
       }
     })
     .catch(() => {
-      onSendError(); // Обработка сетевых ошибок
+      onSendError();
       throw new Error('Сетевая ошибка при отправке данных');
     });
 }
